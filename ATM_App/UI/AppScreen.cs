@@ -17,13 +17,9 @@ namespace ATM_App.UI
             Console.WriteLine("\n\n-----------Welcome to my ATM App----------\n\n");
             Console.WriteLine("Please Enter your ATM Card");
             Console.WriteLine("Actual ATM Machine will read the number validate your card and accept it");
-            PressEnterToContinue();
+            Utility.PressEnterToContinue();
         }
 
-        private static void PressEnterToContinue()
-        {
-            Console.WriteLine("\nPress Enter to continue...\n");
-            Console.ReadLine();
-        }
+        
     }
 }
