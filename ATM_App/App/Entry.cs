@@ -16,7 +16,10 @@ namespace ATM_App.App
 
             ATM_App atmApp = new ATM_App();
 
+            atmApp.InitializeData();
+
             atmApp.CheckUserCardNumAndPassword();
+            atmApp.Welcome();
             
             Utility.PressEnterToContinue();
         }

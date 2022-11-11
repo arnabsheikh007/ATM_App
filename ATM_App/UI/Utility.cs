@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ATM_App.UI
@@ -69,6 +70,16 @@ namespace ATM_App.UI
         {
             Console.WriteLine($"Enter {prompt}");
             return Console.ReadLine();
+        }
+
+        public static void PrintDotAnimation(int timer = 10)
+        {
+            for (int i = 0; i < timer; i++)
+            {
+                Console.Write(".");
+                Thread.Sleep(300);
+            }
+            Console.Clear();
         }
         public static void PressEnterToContinue()
         {

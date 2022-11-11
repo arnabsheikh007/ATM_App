@@ -15,12 +15,51 @@ namespace ATM_App
         public void CheckUserCardNumAndPassword()
         {
             bool isCorrectLogin = false;
+            while (isCorrectLogin == false)
+            {
+                UserAccount inputAccount = AppScreen.UserLoginForm();
+                AppScreen.LoginProgress();
+                foreach(UserAccount account in userAccountList)
+                {
+                    selectedAccount = account;
+                    if (inputAccount.CardNumber.Equals(selectedAccount.CardNumber))
+                    {
+                        selectedAccount.TotalLogin++;
+                        if (inputAccount.CardPin.Equals(selectedAccount.CardPin))
+                        {
+                            selectedAccount = account;
+                            if(selectedAccount.IsLocked || selectedAccount.TotalLogin > 3)
+                            {
+                                AppScreen.PrintLockMsg();
+                            }
+                            else
+                            {
+                                selectedAccount.TotalLogin = 0;
+                                isCorrectLogin = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(isCorrectLogin == false)
+                    {
+                        Utility.PrintMessage("\nInvalid Card number or PIN....",false);
 
-            UserAccount tempUserAccount = new UserAccount();
-
-            tempUserAccount.CardNumber = Validator.Convert<long>("Your card number");
-            tempUserAccount.CardPin = Convert.ToInt32(Utility.GetSecretInput("Enter your card pin")); 
+                        selectedAccount.IsLocked = selectedAccount.TotalLogin == 3;
+                        if (selectedAccount.IsLocked)
+                        {
+                            AppScreen.PrintLockMsg();
+                        }
+                    }
+                    Console.Clear();
+                }
+            }
         }
+
+        public void Welcome()
+        {
+            Console.WriteLine($"Welcome {selectedAccount.FullName}");
+        }
+
 
         public void InitializeData()
         {
@@ -32,7 +71,7 @@ namespace ATM_App
                     FullName = "Arnab Sheikh",
                     AccountNumber = 123123123,
                     CardNumber = 321321321,
-                    CardPin = 1010,
+                    CardPin = 101010,
                     AccountBalance = 100000.00m,
                     IsLocked = false
                 },
@@ -42,7 +81,7 @@ namespace ATM_App
                     FullName = "Sheikh Arnab",
                     AccountNumber = 123123124,
                     CardNumber = 321321322,
-                    CardPin = 1212,
+                    CardPin = 121212,
                     AccountBalance = 150000.00m,
                     IsLocked = false
                 },
@@ -52,9 +91,9 @@ namespace ATM_App
                     FullName = "Sheikh Bahauddin Arnab",
                     AccountNumber = 123123125,
                     CardNumber = 321321323,
-                    CardPin = 2121,
+                    CardPin = 212121,
                     AccountBalance = 50000.00m,
-                    IsLocked = false
+                    IsLocked = true
                 },
             };
         }
