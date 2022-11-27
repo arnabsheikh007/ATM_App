@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,6 +10,7 @@ namespace ATM_App.UI
 {
     public static class Utility
     {
+        private static CultureInfo culture = new CultureInfo("bn-BD");
         public static string GetSecretInput(string prompt)
         {
             bool isPrompt = true;
@@ -85,6 +87,11 @@ namespace ATM_App.UI
         {
             Console.WriteLine("\nPress Enter to continue...\n");
             Console.ReadLine();
+        }
+
+        public static string FormatAmount(decimal amount)
+        {
+            return String.Format(culture, "{0:C2}", amount);
         }
     }
 }

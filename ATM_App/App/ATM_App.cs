@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace ATM_App
 {
-    public class ATM_App : IUserLogin
+    public class ATM_App : IUserLogin, IUserAccountActions
 
     {
         private List<UserAccount> userAccountList;
@@ -71,7 +71,7 @@ namespace ATM_App
             switch(Validator.Convert<int>("an option: "))
             {
                 case (int)AppMenu.CheckBalance:
-                    Console.WriteLine("Checking Balance...");
+                    CheckBalance();
                     break;
                 case (int)AppMenu.PlaceDeposit:
                     Console.WriteLine("placing deposit...");
@@ -87,6 +87,8 @@ namespace ATM_App
                     break;
                 case (int)AppMenu.Logout:
                     AppScreen.LogOutProgress();
+                    Utility.PrintMessage("You are successfully logged out. Please collect your ATM Card.");
+                    Run();
                     break;
                 default:
                     Utility.PrintMessage("Invalid Option",false);
@@ -135,5 +137,19 @@ namespace ATM_App
             };
         }
 
+        public void CheckBalance()
+        {
+            Utility.PrintMessage($"Your Account Balance is {Utility.FormatAmount(selectedAccount.AccountBalance)}");
+        }
+
+        public void PlaceDeposit()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void MakeWithdrawal()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
