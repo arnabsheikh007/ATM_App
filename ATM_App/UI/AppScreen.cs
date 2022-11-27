@@ -43,6 +43,31 @@ namespace ATM_App.UI
             Environment.Exit(1);
         }
 
+        internal static void WelcomeCustomer(string FullName)
+        {
+            Console.WriteLine($"Welcome {FullName}");
+            Utility.PressEnterToContinue();
+        }
+
+        internal static void DisplayAppMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("----------App Menu----------");
+            Console.WriteLine(":                          :");
+            Console.WriteLine("1. Account Balance         :");
+            Console.WriteLine("2. Cash Deposit            :");
+            Console.WriteLine("3. Withdrawal              :");
+            Console.WriteLine("4. Transfer Balance        :");
+            Console.WriteLine("5. Transections            :");
+            Console.WriteLine("6. Log Out                 :");
+        }
+
+        internal static void LogOutProgress()
+        {
+            Console.WriteLine("Good Bye");
+            Utility.PrintDotAnimation();
+            Console.Clear();
+        }
 
     }
 }

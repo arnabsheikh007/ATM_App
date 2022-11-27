@@ -1,4 +1,5 @@
 ﻿using ATM_App.Domain.Entities;
+using ATM_App.Domain.Enums;
 using ATM_App.Domain.Interfaces;
 using ATM_App.UI;
 using System;
@@ -11,6 +12,15 @@ namespace ATM_App
     {
         private List<UserAccount> userAccountList;
         private UserAccount selectedAccount;
+
+        public void Run()
+        {
+            AppScreen.Welcome();
+            CheckUserCardNumAndPassword();
+            AppScreen.WelcomeCustomer(selectedAccount.FullName);
+            AppScreen.DisplayAppMenu();
+            ProcessMenuOption();
+        }
 
         public void CheckUserCardNumAndPassword()
         {
@@ -55,10 +65,37 @@ namespace ATM_App
             }
         }
 
-        public void Welcome()
+
+        private void ProcessMenuOption()
         {
-            Console.WriteLine($"Welcome {selectedAccount.FullName}");
+            switch(Validator.Convert<int>("an option: "))
+            {
+                case (int)AppMenu.CheckBalance:
+                    Console.WriteLine("Checking Balance...");
+                    break;
+                case (int)AppMenu.PlaceDeposit:
+                    Console.WriteLine("placing deposit...");
+                    break;
+                case (int)AppMenu.MakeWithdrawal:
+                    Console.WriteLine("Making Withdrawal...");
+                    break;
+                case (int)AppMenu.InternalTransfer:
+                    Console.WriteLine("Making Internal Transfer...");
+                    break;
+                case (int)AppMenu.ViewTransaction:
+                    Console.WriteLine("Viewing Transection...");
+                    break;
+                case (int)AppMenu.Logout:
+                    AppScreen.LogOutProgress();
+                    break;
+                default:
+                    Utility.PrintMessage("Invalid Option",false);
+                    break;
+               
+            }
         }
+
+        
 
 
         public void InitializeData()
