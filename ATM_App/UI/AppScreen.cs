@@ -6,6 +6,7 @@ namespace ATM_App.UI
 {
     public static class AppScreen
     {
+        internal static string cur = "BDT ";
         internal static void Welcome()
         {
             Console.Clear();

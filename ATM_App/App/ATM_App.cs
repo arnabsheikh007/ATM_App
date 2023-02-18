@@ -7,11 +7,12 @@ using System.Collections.Generic;
 
 namespace ATM_App
 {
-    public class ATM_App : IUserLogin, IUserAccountActions
+    public class ATM_App : IUserLogin, IUserAccountActions, ITransecton
 
     {
         private List<UserAccount> userAccountList;
         private UserAccount selectedAccount;
+        private List<Transection> _listOfTransections;
 
         public void Run()
         {
@@ -74,7 +75,7 @@ namespace ATM_App
                     CheckBalance();
                     break;
                 case (int)AppMenu.PlaceDeposit:
-                    Console.WriteLine("placing deposit...");
+                    PlaceDeposit();
                     break;
                 case (int)AppMenu.MakeWithdrawal:
                     Console.WriteLine("Making Withdrawal...");
@@ -135,6 +136,7 @@ namespace ATM_App
                     IsLocked = true
                 },
             };
+            _listOfTransections = new List<Transection>();
         }
 
         public void CheckBalance()
@@ -144,10 +146,78 @@ namespace ATM_App
 
         public void PlaceDeposit()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("\nOnly multiples of 500 and 1000 BDT Allowed\n");
+            var transection_amount = Validator.Convert<int>($"Amount {AppScreen.cur}");
+
+            //Simulate counting
+            Console.WriteLine("\nChecking and Counting bank notes");
+            Utility.PrintDotAnimation();
+            Console.WriteLine("");
+
+            //Some Guard Clause
+            if(transection_amount <= 0)
+            {
+                Utility.PrintMessage("Amount needs to be greater than zero. Try again", false);
+                return;
+            }
+            if(transection_amount % 500 != 0)
+            {
+                Utility.PrintMessage("Enter deposit amount multiple of 500 or 1000. Try again", false);
+                return;
+            }
+            if (PreviewBankNotesCount(transection_amount) == false)
+            {
+                Utility.PrintMessage("You have canceled your action", false);
+                return;
+            }
+
+            //bind transection details to transection object
+            InsertTransection(selectedAccount.Id, TransectionType.Deposite, transection_amount, " ");
+
+            //Update Account balance
+            selectedAccount.AccountBalance += transection_amount;
+
+            //print success message
+            Utility.PrintMessage($"Your deposit of {Utility.FormatAmount(transection_amount)} was successful", true);
         }
 
         public void MakeWithdrawal()
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool PreviewBankNotesCount(int amount)
+        {
+            int thousandNotesCounts = amount / 1000;
+            int fiveHundredNotes = (amount % 1000) / 500;
+
+            Console.WriteLine("\nSummary");
+            Console.WriteLine("---------");
+            Console.WriteLine($"{AppScreen.cur}1000 X {thousandNotesCounts} = {1000*thousandNotesCounts}");
+            Console.WriteLine($"{AppScreen.cur} 500 X {fiveHundredNotes} = {500*fiveHundredNotes}");
+            Console.WriteLine($"Total Amount : {Utility.FormatAmount(amount)}\n\n\n");
+
+            int opt = Validator.Convert<int>("1to confirm");
+            return opt.Equals(1);
+
+        }
+
+        public void InsertTransection(long _UserBankAccountID, TransectionType _tranType, decimal _tranAmount, string _desc)
+        {
+            var transection = new Transection()
+            {
+                TransectionID = Utility.GetTransectionID(),
+                UserBankAccount = _UserBankAccountID,
+                TransectionDate = DateTime.Now,
+                TransectionType = _tranType,
+                TransectionAmount = _tranAmount,
+                Description = _desc
+            };
+
+            _listOfTransections.Add(transection);
+        }
+
+        public void ViewTransection()
         {
             throw new NotImplementedException();
         }
