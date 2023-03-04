@@ -13,6 +13,7 @@ namespace ATM_App
         private List<UserAccount> userAccountList;
         private UserAccount selectedAccount;
         private List<Transection> _listOfTransections;
+        private const decimal minKeptAmount = 500;
 
         public void Run()
         {
@@ -183,7 +184,46 @@ namespace ATM_App
 
         public void MakeWithdrawal()
         {
-            throw new NotImplementedException();
+            var transection_amount = 0;
+            int SelectedAmount = AppScreen.SelectAmount();
+            if(SelectedAmount == -1)
+            {
+                SelectedAmount = AppScreen.SelectAmount();
+            }
+            else if(SelectedAmount != 0)
+            {
+                transection_amount = SelectedAmount;
+            }
+            else
+            {
+                transection_amount = Validator.Convert<int>($"Amount {AppScreen.cur}");
+            }
+
+            //Input validation
+            if (transection_amount <= 0)
+            {
+                Utility.PrintMessage("Amount needs to be greater than zero. Try again", false);
+                return;
+            }
+            if (transection_amount % 500 != 0)
+            {
+                Utility.PrintMessage("You can only withdraw multiple of 500 or 1000. Try again", false);
+                return;
+            }
+            if(transection_amount > selectedAccount.AccountBalance)
+            {
+                Utility.PrintMessage("Insufficient Balance", false);
+                return;
+            }
+            if((selectedAccount.AccountBalance - transection_amount) < minKeptAmount)
+            {
+                Utility.PrintMessage($"Withdrawal failed. You need to keep minimum {Utility.FormatAmount(minKeptAmount)}",false);
+            }
+
+            InsertTransection(selectedAccount.Id, TransectionType.Withdrawal, -transection_amount, "");
+            selectedAccount.AccountBalance -= transection_amount;
+            Utility.PrintMessage($"You have successfully withdrawn {Utility.FormatAmount(transection_amount)}", true);
+
         }
 
         private bool PreviewBankNotesCount(int amount)
