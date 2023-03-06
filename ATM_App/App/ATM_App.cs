@@ -2,6 +2,7 @@
 using ATM_App.Domain.Enums;
 using ATM_App.Domain.Interfaces;
 using ATM_App.UI;
+using ConsoleTables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +28,11 @@ namespace ATM_App
             AppScreen.Welcome();
             CheckUserCardNumAndPassword();
             AppScreen.WelcomeCustomer(selectedAccount.FullName);
-            AppScreen.DisplayAppMenu();
-            ProcessMenuOption();
+            while (true)
+            {
+                AppScreen.DisplayAppMenu();
+                ProcessMenuOption();
+            }
         }
 
         public void CheckUserCardNumAndPassword()
@@ -93,7 +97,7 @@ namespace ATM_App
                     ProcessInternalTransfer(internalTransfer);
                     break;
                 case (int)AppMenu.ViewTransaction:
-                    Console.WriteLine("Viewing Transection...");
+                    ViewTransection();
                     break;
                 case (int)AppMenu.Logout:
                     AppScreen.LogOutProgress();
@@ -267,7 +271,23 @@ namespace ATM_App
 
         public void ViewTransection()
         {
-            throw new NotImplementedException();
+            var filteredTransectionList = _listOfTransections.Where(t => t.UserBankAccount == selectedAccount.Id).ToList();
+            //check if there's a transaction
+            if (filteredTransectionList.Count <= 0)
+            {
+                Utility.PrintMessage("You have no transaction yet.", true);
+            }
+            else
+            {
+                var table = new ConsoleTable("Id", "Transaction Date", "Type", "Descriptions", "Amount " + AppScreen.cur);
+                foreach (var tran in filteredTransectionList)
+                {
+                    table.AddRow(tran.TransectionID, tran.TransectionDate, tran.TransectionType, tran.Description, tran.TransectionAmount);
+                }
+                table.Options.EnableCount = false;
+                table.Write();
+                Utility.PrintMessage($"You have {filteredTransectionList.Count} transaction(s)", true);
+            }
         }
         private void ProcessInternalTransfer(InternalTransfer internalTransfer)
         {
@@ -286,7 +306,7 @@ namespace ATM_App
             //check the minimum kept amount 
             if ((selectedAccount.AccountBalance - internalTransfer.TransferAmount) < minKeptAmount)
             {
-                Utility.PrintMessage($"Transfer faile. Your account needs to have minimum" +
+                Utility.PrintMessage($"Transfer failed. Your account needs to have minimum" +
                     $" {Utility.FormatAmount(minKeptAmount)}", false);
                 return;
             }
