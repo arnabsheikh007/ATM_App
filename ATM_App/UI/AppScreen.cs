@@ -4,7 +4,7 @@ using System;
 
 namespace ATM_App.UI
 {
-    public static class AppScreen
+    public class AppScreen
     {
         internal static string cur = "BDT ";
         internal static void Welcome()
@@ -106,6 +106,13 @@ namespace ATM_App.UI
                     return -1;
             }
         }
-
+        internal InternalTransfer InternalTransferForm()
+        {
+            var internalTransfer = new InternalTransfer();
+            internalTransfer.ReciepeintBankAccountNumber = Validator.Convert<long>("recipient's account number:");
+            internalTransfer.TransferAmount = Validator.Convert<decimal>($"amount {cur}");
+            internalTransfer.RecipientBankAccountName = Utility.GetUserInput("recipient's name:");
+            return internalTransfer;
+        } 
     }
 }
